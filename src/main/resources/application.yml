@@ -1,0 +1,67 @@
+spring:
+  application:
+    name: nse-backtest-service
+  datasource:
+    url: jdbc:h2:mem:nsedb;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+    driverClassName: org.h2.Driver
+    username: admin
+    password: admin
+  jpa:
+    database-platform: org.hibernate.dialect.H2Dialect
+    hibernate.ddl-auto: create-drop
+    show-sql: true
+      #defer-datasource-initialization: true
+      #sql:
+    #init:
+    #mode: always
+  h2:
+    console:
+      enabled: true
+  jackson:
+    default-property-inclusion: non_empty
+  cloud:
+    loadbalancer:
+      ribbon:
+        enabled: false
+    openfeign:
+      lazy-attributes-resolution: true
+
+  thymeleaf: # Thymeleaf
+    cache: false
+    mode: HTML
+    encoding: UTF-8
+    prefix: file:src/main/resources/templates/
+  resources: # Static resources
+    static-locations: file:src/main/resources/static/
+    cache:
+      period: 0
+server:
+  port: 8090
+  servlet:
+    context-path: /
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+        exclude: "env,beans"
+
+springdoc:
+  packagesToScan: com.arghya.backtest
+
+logging:
+  level:
+    .: INFO
+    com:
+      arghya:
+        backtest:
+          feign:
+            client:
+              StockEdgeClient: INFO
+
+feign:
+  upstoxClient:
+    url: https://api.upstox.com
+  stockEdgeClient:
+    url: https://api.stockedge.com
